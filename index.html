@@ -145,31 +145,14 @@
       <!-- Publication 1 -->
       <div class="row">
         <div class="col-md-10 col-xs-12">
-          <div class="publication-container">
-            <div class="publication-content">
-              <h4>
-                <a href="https://arxiv.org/abs/2507.07101" target="_blank">
-                  Small Batch Size Training for Language Models: When Vanilla SGD Works, and Why Gradient Accumulation Is Wasteful
-                </a>
-              </h4>
-              <h5>
-                M. Marek, S. Lotfi, <b>A. Somasundaram</b>, A. G. Wilson, M. Goldblum
-              </h5>
-              <p>
-                <a href="https://neurips.cc/" target="_blank">[Poster]</a> at 
-                <i>Advances in Neural Information Processing Systems (NeurIPS), 2025</i>
-              </p>
+          <div class="publication-container" style="display: flex; flex-direction: column; gap: 20px;">
+            
+            <!-- Thumbnail for desktop -->
+            <div class="pub-thumb" style="max-width: 200px; margin-right: 20px;">
+              <img src="assets/pubs/no_backprop.png" alt="No Backprop" style="width: 100%; height: auto; object-fit: contain;">
             </div>
-          </div>
-        </div>
-      </div>
 
-      <hr>
-
-      <!-- Publication 2 -->
-      <div class="row">
-        <div class="col-md-10 col-xs-12">
-          <div class="publication-container">
+            <!-- Publication Content -->
             <div class="publication-content">
               <h4>
                 <a href="https://arxiv.org/abs/2402.09769" target="_blank">
@@ -177,20 +160,74 @@
                 </a>
               </h4>
               <h5>
-                <b>A. Somasundaram</b>, P. Mishra, A. Borthakur
+                <b>A Somasundaram</b>, P Mishra, A Borthakur
               </h5>
               <p>
-                Published in <i>Transactions on Machine Learning Research (TMLR), 2024</i><br>
-                <a href="https://drive.google.com/file/d/1MGvw7TpTwyrQAKBt2wryS2ekToxdcQx5/view" target="_blank">[Poster]</a> 
-                <b>Best Poster Award</b> @ 
-                <a href="https://events.nyas.org/event/23384180-ad97-4cad-baee-adae8e260c89/summary" target="_blank">15<sup>th</sup> Annual Machine Learning Symposium</a>, 
-                <a href="https://www.nyas.org/" target="_blank">New York Academy of Sciences</a>, 2024
+                <a href="https://drive.google.com/file/d/1MGvw7TpTwyrQAKBt2wryS2ekToxdcQx5/view" target="_blank">[Poster]</a>  
+                Best poster award @ 
+                <a href="https://events.nyas.org/event/23384180-ad97-4cad-baee-adae8e260c89/summary" target="_blank">
+                  15<sup>th</sup> Annual Machine Learning Symposium
+                </a>,  
+                <a href="https://www.nyas.org/" target="_blank">New York Academy of Sciences</a>
               </p>
             </div>
+
           </div>
         </div>
       </div>
 
+    <!-- Publication 2 -->
+    <div class="row">
+      <div class="col-md-10 col-xs-12">
+        <div class="publication-container" style="display: flex; flex-direction: column; gap: 20px;">
+
+          <!-- Thumbnail -->
+          <div class="pub-thumb" style="max-width: 200px; margin-right: 20px;">
+            <img src="assets/pubs/small_batch.png" alt="Small Batch" style="width: 100%; height: auto; object-fit: contain;">
+          </div>
+
+          <!-- Publication Content -->
+          <div class="publication-content">
+            <h4>
+              <a href="https://arxiv.org/abs/2507.07101" target="_blank">
+                Small Batch Size Training for Language Models: When Vanilla SGD Works, and Why Gradient Accumulation Is Wasteful
+              </a>
+            </h4>
+            <h5>
+              Martin Marek, Sanae Lotfi, <b>Aditya Somasundaram</b>, Andrew Gordon Wilson, Micah Goldblum
+            </h5>
+            <p>[Poster] at NeurIPS 2025</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Media Queries -->
+    <style>
+      @media (max-width: 767px) {
+        .publication-container {
+          flex-direction: column !important;
+        }
+        .pub-thumb {
+          margin: 0 auto 15px auto; /* center images on mobile */
+          max-width: 100%;
+        }
+      }
+
+      @media (min-width: 768px) {
+        .publication-container {
+          flex-direction: row;
+          align-items: flex-start;
+        }
+        .pub-thumb {
+          flex: 0 0 200px; /* fixed width on desktop */
+        }
+        .publication-content {
+          flex: 1;
+        }
+      }
+    </style>
 
     <!-- Writing -->
     <div class="container" id="writing" style="margin-top: 20px;">
