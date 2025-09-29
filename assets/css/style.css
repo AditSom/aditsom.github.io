@@ -1,0 +1,112 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+.container {
+    width: 100%;
+}
+
+p {
+    font-size: 17px;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: auto;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    display: inline;
+}
+
+li a {
+    text-align: left;
+    padding-right: 16px;
+    text-decoration: none;
+}
+
+#flex {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 4px;
+}
+
+/* Create four equal columns that sits next to each other */
+.column {
+  flex: 25%;
+  max-width: 25%;
+  padding: 0 4px;
+}
+
+.about{
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+.publications{
+    margin-bottom: 30px;
+}
+
+.column img {
+  margin-top: 8px;
+  vertical-align: middle;
+}
+
+/* Responsive layout - makes a two column-layout instead of four columns */
+@media screen and (max-width: 800px) {
+  .column {
+    flex: 50%;
+    max-width: 50%;
+  }
+}
+
+/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .column {
+    flex: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .about, .about_img {
+      width: 100%;
+      margin-left: 15px;
+      margin-right: 15px;
+  }
+  .about_img {
+      margin-top: 0;
+      margin-bottom: 20px;
+      text-align: center;
+      order: -1;
+  }
+  .about_img img {
+      max-width: 250px;
+      margin: 0 auto;
+  }
+  .col-md-offset-1 {
+      margin-left: 0;
+  }
+  ul {
+      padding-left: 0;
+  }
+  ul li {
+      display: inline-block;
+      margin-right: 15px;
+  }
+  .row {
+      display: flex;
+      flex-direction: column;
+  }
+}
