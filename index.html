@@ -79,41 +79,72 @@
     </div>
 
     <!-- Publications Section -->
-    <div id="publications" style="margin-top: 50px; text-align: center;">
-      <h2 style="font-size: 2em; margin-bottom: 20px;">Publications</h2>
-      <p>
-        Feel free to check out my 
-        <a href="https://scholar.google.com/citations?user=wvh68FUAAAAJ&hl=en" target="_blank">
-          Google Scholar Profile
-        </a>
-        as well.
-      </p>
+    <div class="container publications" style="margin-top: 40px;">
+      <h2 class="col-md-offset-1">Projects & Publications</h2>
+      <hr>
 
-      <div style="max-width: 800px; margin: 0 auto; text-align: left;">
-        <ol>
-          <li style="margin-bottom: 20px;">
-            <a href="https://arxiv.org/abs/2402.09769" target="_blank">
-              <b>Representation Learning Using a Single Forward Pass</b>
-            </a><br>
-            <b>A Somasundaram</b>, P Mishra, A Borthakur<br>
-            <a href="https://drive.google.com/file/d/1MGvw7TpTwyrQAKBt2wryS2ekToxdcQx5/view" target="_blank">[Poster]</a>  
-            Best poster award @ 
-            <a href="https://events.nyas.org/event/23384180-ad97-4cad-baee-adae8e260c89/summary" target="_blank">
-              15<sup>th</sup> Annual Machine Learning Symposium
-            </a>,  
-            <a href="https://www.nyas.org/" target="_blank">New York Academy of Sciences</a>
-          </li>
+      <!-- Publication 1 -->
+      <div class="row">
+        <div class="col-md-offset-1 col-md-10">
+          <div class="publication-container" style="display: flex; flex-direction: column; gap: 20px;">
+            <div class="publication-content">
+              <h4>
+                <a href="https://arxiv.org/abs/2402.09769" target="_blank">
+                  Representation Learning Using a Single Forward Pass
+                </a>
+              </h4>
+              <h5>
+                A Somasundaram, P Mishra, A Borthakur
+              </h5>
+              <p>
+                <a href="https://drive.google.com/file/d/1MGvw7TpTwyrQAKBt2wryS2ekToxdcQx5/view" target="_blank">[Poster]</a>  
+                Best poster award @ 
+                <a href="https://events.nyas.org/event/23384180-ad97-4cad-baee-adae8e260c89/summary" target="_blank">
+                  15<sup>th</sup> Annual Machine Learning Symposium
+                </a>,  
+                <a href="https://www.nyas.org/" target="_blank">New York Academy of Sciences</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-          <li style="margin-bottom: 20px;">
-            <a href="https://arxiv.org/abs/2507.07101" target="_blank">
-              <b>Small Batch Size Training for Language Models: When Vanilla SGD Works, and Why Gradient Accumulation Is Wasteful</b>
-            </a><br>
-            Martin Marek, Sanae Lotfi, <b>Aditya Somasundaram</b>, Andrew Gordon Wilson, Micah Goldblum<br>
-            [Poster] at NeurIPS 2025
-          </li>
-        </ol>
+      <hr>
+
+      <!-- Publication 2 -->
+      <div class="row">
+        <div class="col-md-offset-1 col-md-10">
+          <div class="publication-container" style="display: flex; flex-direction: column; gap: 20px;">
+            <div class="publication-content">
+              <h4>
+                <a href="https://arxiv.org/abs/2507.07101" target="_blank">
+                  Small Batch Size Training for Language Models: When Vanilla SGD Works, and Why Gradient Accumulation Is Wasteful
+                </a>
+              </h4>
+              <h5>
+                Martin Marek, Sanae Lotfi, <b>Aditya Somasundaram</b>, Andrew Gordon Wilson, Micah Goldblum
+              </h5>
+              <p>[Poster] at NeurIPS 2025</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+
+    <style>
+      @media (min-width: 768px) {
+        .publication-container {
+          flex-direction: row !important;
+        }
+        .video-wrapper {
+          flex: 0 0 300px;
+        }
+        .publication-content {
+          flex: 1;
+        }
+      }
+    </style>
+
 
     <!-- Writing -->
     <div class="container" id="writing" style="margin-top: 20px;">
