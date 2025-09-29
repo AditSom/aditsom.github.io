@@ -1,4 +1,4 @@
----
+<!-- ---
 layout: page
 permalink: /pubs/
 title:
@@ -16,4 +16,4 @@ Feel free to refer my [Google Scholar Profile](https://scholar.google.com/citati
    
 
 2. [**Small Batch Size Training for Language Models: When Vanilla SGD Works, and Why Gradient Accumulation Is Wasteful**](https://arxiv.org/abs/2507.07101) <br />
-   Martin Marek, Sanae Lotfi, **Aditya Somasundaram**, Andrew Gordon Wilson, Micah Goldblum (under Review)
+   Martin Marek, Sanae Lotfi, **Aditya Somasundaram**, Andrew Gordon Wilson, Micah Goldblum (under Review) -->
