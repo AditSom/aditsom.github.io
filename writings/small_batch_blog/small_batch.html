@@ -97,6 +97,32 @@
     overflow-x: auto;
     }
 
+    .cta-button {
+    display: inline-block;
+    padding: 12px 18px;
+    margin-top: 1.5rem;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+    color: #333;
+    transition: all 0.15s ease;
+    }
+
+    .cta-button:hover {
+    background-color: #ffffff;
+    border-color: #aaa;
+    transform: translateY(-1px);
+    }
+
+    .cta-button:active {
+    transform: translateY(0);
+    border-color: #888;
+    }
+
+
   </style>
 
   <!-- MathJax for LaTeX equations -->
@@ -141,6 +167,12 @@
     <div class="meta">Posted on November 1st 2025 • by Aditya Somasundaram</div>
 
     <p>Everyone “knows” that to train large language models you need large batch sizes. Bigger batches mean less gradient noise, better training stability, lower final loss; so the bigger the batch, the better the model. It's a simple, causal story. But there's more than meets the eye. In this post, I will show results suggesting that what appears to be a “batch-size effect” is often a <em>remembrance effect</em> in the optimizer.</p>
+
+    <a class="cta-button" href="https://arxiv.org/abs/2507.07101" target="_blank">
+        Check out the paper (joint with fantastic collaborators)
+        &nbsp;→
+    </a>
+
 
     <p>Most modern optimizers keep exponential moving averages (EMAs) while stepping through parameter space. Intuitively: the model's movement at the current point is blended with what it has seen before. A scalar EMA for a stream \(x_t\) looks like</p>
 
