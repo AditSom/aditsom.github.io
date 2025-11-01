@@ -292,7 +292,7 @@
     </div>
     <p><strong>Small batches are more robust to hyper parameters.</strong> The sensitivity curves broaden dramatically as
     \(B\) tends to 1. At \(B=1\) you get a wide plateau of near-optimal settings over LR, \(\beta_1\) and the second moment
-    half-life; at large B the loss rises quickly once you leave the tuned point. In practice this means fewer
+    half-life; at large \(B\) the loss rises quickly once you leave the tuned point. In practice this means fewer
     sweeps and easier hyper parameter tuning when you're running small batches.</p>
 
     <!-- Fig 1a: Optimizer gap vs batch size -->
@@ -310,7 +310,7 @@
     <ul>
     <li><strong>Use the smallest batch size that maximizes the throughput (MFU) of your cluster, and tune \(\beta_2\) appropriately.</strong>
         Pick a target token half-life \(t_2\) (e.g., 10M tokens) and set \(\beta_2 = 2^{-(B·T)/t_2} \) so the second moment
-        memory is constant in <em>tokens</em> as you change B or sequence length T. If you later change microbatching or
+        memory is constant in <em>tokens</em> as you change \(B\) or sequence length \(T\). If you later change microbatching or
         packing, recompute \(\beta_2\) from the actual tokens per optimizer step.</li>
 
     <li><strong>Avoid simulating large batches with gradient accumulation.</strong>
