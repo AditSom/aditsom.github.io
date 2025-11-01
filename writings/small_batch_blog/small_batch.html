@@ -125,8 +125,6 @@
     transform: translateY(0);
     }
 
-
-
   </style>
 
   <!-- MathJax for LaTeX equations -->
@@ -180,7 +178,6 @@
     </div>
 
 
-
     <p>Most modern optimizers keep exponential moving averages (EMAs) while stepping through parameter space. Intuitively: the model's movement at the current point is blended with what it has seen before. A scalar EMA for a stream \(x_t\) looks like</p>
 
     <div class="math-display">$$
@@ -228,6 +225,8 @@
         $$
     </div>
 
+    <p>This way, regardless of change in batch size or sequence length, the half-life of the second moment with respect to total tokens remains constant.</p>
+
     <p>In our results below, we show that reframing and holding the half-life of \(\beta_2\) fixed allows for stable training, even down to batch size 1!</p>
 
     <div class="figure">
@@ -267,28 +266,23 @@
     optimizers widens. The small-batch regime lets you drop optimizer state without giving up performance,
     which is great for memory-constrained runs.</p>
 
-<!-- 
+
     <h2>Practical Recommendations for the broke practitioner</h2>
     <ul>
-    <li><strong>Use the largest batch size that maximizes the throughput of your cluster, and tune \(\beta_2\) appropriately.</strong>
-        Pick a target token half-life t₂ (e.g., 10M tokens) and set \(\beta_2\) = 2<sup>-(B·T)/t₂</sup> so the second-moment
+    <li><strong>Use the smallest batch size that maximizes the throughput of your cluster, and tune \(\beta_2\) appropriately.</strong>
+        Pick a target token half-life \(t_2\) (e.g., 10M tokens) and set \(\beta_2\) = 2<sup>-(B·T)/\(t_2\)</sup> so the second moment
         memory is constant in <em>tokens</em> as you change B or sequence length T. If you later change microbatching or
         packing, recompute \(\beta_2\) from the actual tokens per optimizer step.</li>
 
     <li><strong>Avoid simulating large batches with gradient accumulation.</strong>
         Accumulation reduces the number of optimizer <em>steps</em>, which silently changes per-step EMA dynamics.
-        If you must accumulate (e.g., for multi-replica bandwidth), base \(\beta_2\) on the <em>effective</em> tokens per
-        optimizer step (microbatch_tokens × accumulation_steps) so t₂ stays fixed.</li>
+        If you must accumulate, base \(\beta_2\) on the <em>effective</em> tokens per
+        optimizer step (microbatch_tokens x accumulation_steps) so \(t_2\) stays fixed.</li>
 
     <li><strong>Use Adafactor if memory is the bottleneck.</strong>
         In the small-batch regime it matches strong baselines while keeping a tiny optimizer state, letting you fit
         larger models or longer context windows. It pairs naturally with the token half-life view.</li>
-
-    <li><strong>Don’t assume √B learning-rate scaling.</strong> In our sweeps LR increased far more slowly; do a short LR sweep at each B.</li>
-    <li><strong>\(\beta_1\) is boring (good!).</strong> The default \(\beta_1\)=0.9 worked well across B; spend your tuning budget elsewhere.</li>
-    <li><strong>B=1 tips.</strong> Turning off weight decay and using a long t₂ (which implies \(\beta_2\)≈0.9999 for typical token counts per step)
-        matched large-B baselines while staying stable.</li>
-    </ul> -->
+    </ul>
 
     <div class="bibtex-block">
         <button class="copy-btn" onclick="copyBibtex()">Copy</button>
