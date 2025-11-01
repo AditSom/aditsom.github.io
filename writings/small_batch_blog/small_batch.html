@@ -120,9 +120,10 @@
     </div>
 
 
-    <p>So far, we've talked about half-life in terms of <em>steps</em>. But in large-scale language model training, a step isn't a fixed unit. Each step processes \(B \times T\) tokens, where \(B\) is the batch size and \(T\) is the sequence length. That means a half-life measured in “steps” is actually a half-life measured in <em>tokens consumed</em>.</p>
+    <p>So far, we've talked about half-life in terms of <em>steps</em>. But in large-scale language model training, a step isn't a fixed unit. Each step processes \(B \times T\) tokens, where \(B\) is the batch size and \(T\) is the sequence length. That means a half-life measured in “steps” is actually a half-life measured in <em>tokens consumed</em>. 
+        If we keep \(\beta_2\) fixed while changing the batch size \(B\), then we covertly change how long the optimizer “remembers” in terms of tokens. Smaller batch sizes mean fewer tokens per step, so the same \(\beta_2\) corresponds to a shorter effective half-life in token units. In other words, holding \(\beta_2\) fixed (as is convention) causes the optimizer to “forget faster”.</p>
 
-    <p>If we keep \(\beta_2\) fixed while changing the batch size \(B\), then we covertly change how long the optimizer “remembers” in terms of tokens. Smaller batch sizes mean fewer tokens per step, so the same \(\beta_2\) corresponds to a shorter effective half-life in token units. In other words, holding \(\beta_2\) fixed (as is convention) causes the optimizer to “forget faster”. In our results below, we show that reframing and holding the half-life of \(\beta_2\) fixed allows for stable training, even down to batch size 1.</p>
+    <p>In our results below, we show that reframing and holding the half-life of \(\beta_2\) fixed allows for stable training, even down to batch size 1!</p>
 
     <div class="figure">
         <img src="initial_experiment.jpg" alt="Fixing \(\beta_2\) vs fixing half-life" />
