@@ -306,7 +306,7 @@
     which is great for memory-constrained runs.</p>
 
 
-    <h2>Practical Recommendations for the broke practitioner (aka. me)</h2>
+    <h2>Practical recommendations for the broke practitioner (aka. me)</h2>
     <ul>
     <li><strong>Use the smallest batch size that maximizes the throughput (MFU) of your cluster, and tune \(\beta_2\) appropriately.</strong>
         Pick a target token half-life \(t_2\) (e.g., 10M tokens) and set \(\beta_2 = 2^{-(B·T)/\(t_2\)} \) so the second moment
