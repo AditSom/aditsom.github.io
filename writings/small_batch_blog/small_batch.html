@@ -60,13 +60,13 @@
   </header>
 
   <main class="post">
-    <h1>Blog Post for small batch training:</h1>
+    <h1>How to train LLMs with small batch sizes?</h1>
     <!-- Optional meta line; keep or remove -->
     <div class="meta">Posted on November 1st 2025 • by Aditya Somasundaram</div>
 
-    <p>Everyone “knows” that to train large language models you need large batch sizes. Bigger batches mean less gradient noise, better training stability, lower final loss; so the bigger the batch, the better the model. It’s a simple, causal story. But there’s more than meets the eye. Through this post, I will show results that what looks like a “batch-size effect” is often a remembering effect in the optimizer.</p>
+    <p>Everyone “knows” that to train large language models you need large batch sizes. Bigger batches mean less gradient noise, better training stability, lower final loss; so the bigger the batch, the better the model. It's a simple, causal story. But there's more than meets the eye. In this post, I will show results suggesting that what appears to be a “batch-size effect” is often a <em>remembrance effect</em> in the optimizer.</p>
 
-    <p>Most modern optimizers keep exponential moving averages (EMAs) while stepping through parameter space. Intuitively: the model’s movement at the current point is blended with what it has seen before. A scalar EMA for a stream \(x_t\) looks like</p>
+    <p>Most modern optimizers keep exponential moving averages (EMAs) while stepping through parameter space. Intuitively: the model's movement at the current point is blended with what it has seen before. A scalar EMA for a stream \(x_t\) looks like</p>
 
     <div class="math-display">$$
     y_t = \alpha\, y_{t-1} + (1 - \alpha)\, x_t
@@ -76,20 +76,29 @@
 
     <p>Adam uses these EMAs too. In its simplest unbiased form,</p>
 
-    <div class="math-display">$$
+    <div class="math-display">
+    $$
     \begin{aligned}
-    m_t &= \beta_1\, m_{t-1} + (1-\beta_1)\, g_t,\\
-    v_t &= \beta_2\, v_{t-1} + (1-\beta_2)\, g_t^{\,2},\\
-    \hat m_t &= \frac{m_t}{1-\beta_1^{\,t}}, \qquad
-    \hat v_t = \frac{v_t}{1-\beta_2^{\,t}},\\
+    m_t &= \beta_1\, m_{t-1} + (1-\beta_1)\, g_t, \\[8pt]
+    v_t &= \beta_2\, v_{t-1} + (1-\beta_2)\, g_t^{\,2}, \\[8pt]
+    \hat m_t &= \frac{m_t}{1-\beta_1^{\,t}}, \\[8pt]
+    \hat v_t &= \frac{v_t}{1-\beta_2^{\,t}}, \\[12pt]
     \theta_{t+1} &= \theta_t - \eta \,\frac{\hat m_t}{\sqrt{\hat v_t} + \varepsilon}\,.
     \end{aligned}
-    $$</div>
+    $$
+    </div>
+
 
     <p>Where \(g_t\) is the gradient at time step \(t\), \(\beta_1\) controls the first moment, \(\beta_2\) controls the second moment.</p>
 
     <h3>What do the \(\beta\)s do?</h3>
-    <p>Think of each \(\beta\) as a forgetting factor on the previous estimate. For a simple EMA \(y_t = \alpha y_{t-1} + (1 - \alpha) x_t\), the weight on past data decays geometrically; the half-life \(H\) (in steps) satisfies \(\alpha^H=1/2\). In Adam’s second moment equation \(v_t=\beta_2 v_{t−1}+(1−\beta_2)g_t^2\), the analogous relation is \(\beta_2^H=1/2\). So \(\beta_2\) directly sets “how many steps” of history your optimizer remembers. Shorter half-life → snappier, more reactive updates; longer half-life → smoother, more stable updates.</p>
+    <p>Think of each \(\beta\) as a forgetting factor on the previous estimate. For a simple EMA \(y_t = \alpha y_{t-1} + (1 - \alpha) x_t\), the weight on past data decays geometrically; the half-life \(H\) (in steps) satisfies \(\alpha^H=1/2\). In Adam's second moment equation \(v_t=\beta_2 v_{t-1}+(1-\beta_2)g_t^2\), the analogous relation is \(\beta_2^H=1/2\). So \(\beta_2\) directly sets “how many steps” of history your optimizer remembers. Shorter half-life means updates which react more towards incoming data; longer half-life means smoother updates which prioritizes information accumulated in the past.</p>
+
+    <div class="figure">
+        <img src="halflife_steps.jpg" alt="Half-life effect of beta in Adam" />
+        <p class="caption">Figure: Effect of \(\beta\) on exponential decay / half-life in Adam.</p>
+    </div>
+
 
     <p>A training step isn't a fixed amount of data, it consumes \(B \times T\) tokens. If we keep \(\beta_2\) fixed while changing batch size (\(B\)), then we covertly change the “remembrance” amount with respect to tokens! Smaller batch sizes means fewer tokens per step, so the same \(\beta_2\) implies a shorter "remembrance" in tokens. This means that if we hold \(\beta_2\) fixed (as is convention) the optimizer forgets faster in token time than in step time. In our results below, we show that reframing and holding the half life of \(\beta_2\) fixed allows for stable training, even down to batch size 1.</p>
 
