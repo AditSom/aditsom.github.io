@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Small Batch Training — Writing — Aditya Somasundaram</title>
+  <meta name="description" content="Blog post on small-batch training: EMA intuition, Adam equations, token-time half-life, results, and practical recommendations." />
+  <link rel="icon" href="../../AS.png" />
+  <style>
+    :root { --maxw: 820px; }
+    body {
+      margin: 0; padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+      line-height: 1.6; color: #111; background: #fff;
+    }
+    header, main, footer { width: min(100%, var(--maxw)); margin: 0 auto; }
+    header { padding: 24px 16px 8px; }
+    nav a {
+      margin-right: 14px; text-decoration: none; color: #0366d6;
+    }
+    nav a:hover { text-decoration: underline; }
+    h1, h2, h3 { line-height: 1.25; }
+    h1 { font-size: 1.9rem; margin: 24px 0 12px; }
+    h2 { font-size: 1.4rem; margin-top: 28px; }
+    h3 { font-size: 1.15rem; margin-top: 18px; }
+    p, li, blockquote, .math-display { font-size: 1.02rem; }
+    blockquote { border-left: 3px solid #eee; padding-left: 12px; color: #555; }
+    pre, code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+    .post { padding: 0 16px 48px; }
+    .meta { color: #666; font-size: 0.95rem; margin: 4px 0 24px; }
+    .figure-ph {
+      border: 2px dashed #ccc; border-radius: 8px; padding: 16px; margin: 16px 0;
+      background: #fafafa; color: #777; text-align: center; font-size: 0.95rem;
+    }
+    hr { border: none; border-top: 1px solid #eee; margin: 28px 0; }
+    footer { padding: 24px 16px 48px; color: #666; }
+    /* Mobile tweak */
+    @media (max-width: 600px) {
+      h1 { font-size: 1.6rem; }
+      h2 { font-size: 1.25rem; }
+    }
+  </style>
+  <!-- MathJax for LaTeX equations -->
+  <script async id="MathJax-script"
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Aditya Somasundaram</h1>
+    <div>as7458 [at] columbia [dot] edu</div>
+    <nav aria-label="Primary">
+      <a href="../index.html">Home</a>
+      <a href="https://github.com/AditSom" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://scholar.google.com" target="_blank" rel="noopener">Google Scholar</a>
+      <a href="../index.html#Writing">Writing</a>
+      <a href="../chess/index.html">Chess</a>
+    </nav>
+  </header>
+
+  <main class="post">
+    <h1>Blog Post for small batch training:</h1>
+    <!-- Optional meta line; keep or remove -->
+    <div class="meta">Posted on November 1st 2025 • by Aditya Somasundaram</div>
+
+    <p>Everyone “knows” that to train large language models you need large batch sizes. Bigger batches mean less gradient noise, better training stability, lower final loss; so the bigger the batch, the better the model. It’s a simple, causal story. But there’s more than meets the eye. Through this post, I will show results that what looks like a “batch-size effect” is often a remembering effect in the optimizer.</p>
+
+    <p>Most modern optimizers keep exponential moving averages (EMAs) while stepping through parameter space. Intuitively: the model’s movement at the current point is blended with what it has seen before. A scalar EMA for a stream \(x_t\) looks like</p>
+
+    <div class="math-display">$$
+    y_t = \alpha\, y_{t-1} + (1 - \alpha)\, x_t
+    $$</div>
+
+    <p>Where \(0 \le \alpha \le 1\) sets how quickly the past is forgotten. Smaller \(\alpha\) means you trust the latest observation more, and larger \(\alpha\) means a longer remembrance of history. This "remembrance" can also be expressed in terms of half-life (the number of steps after which the effect of a particular observation halves its contribution to the update).</p>
+
+    <p>Adam uses these EMAs too. In its simplest unbiased form,</p>
+
+    <div class="math-display">$$
+    \begin{aligned}
+    m_t &= \beta_1\, m_{t-1} + (1-\beta_1)\, g_t,\\
+    v_t &= \beta_2\, v_{t-1} + (1-\beta_2)\, g_t^{\,2},\\
+    \hat m_t &= \frac{m_t}{1-\beta_1^{\,t}}, \qquad
+    \hat v_t = \frac{v_t}{1-\beta_2^{\,t}},\\
+    \theta_{t+1} &= \theta_t - \eta \,\frac{\hat m_t}{\sqrt{\hat v_t} + \varepsilon}\,.
+    \end{aligned}
+    $$</div>
+
+    <p>Where \(g_t\) is the gradient at time step \(t\), \(\beta_1\) controls the first moment, \(\beta_2\) controls the second moment.</p>
+
+    <h3>What do the \(\beta\)s do?</h3>
+    <p>Think of each \(\beta\) as a forgetting factor on the previous estimate. For a simple EMA \(y_t = \alpha y_{t-1} + (1 - \alpha) x_t\), the weight on past data decays geometrically; the half-life \(H\) (in steps) satisfies \(\alpha^H=1/2\). In Adam’s second moment equation \(v_t=\beta_2 v_{t−1}+(1−\beta_2)g_t^2\), the analogous relation is \(\beta_2^H=1/2\). So \(\beta_2\) directly sets “how many steps” of history your optimizer remembers. Shorter half-life → snappier, more reactive updates; longer half-life → smoother, more stable updates.</p>
+
+    <p>A training step isn't a fixed amount of data, it consumes \(B \times T\) tokens. If we keep \(\beta_2\) fixed while changing batch size (\(B\)), then we covertly change the “remembrance” amount with respect to tokens! Smaller batch sizes means fewer tokens per step, so the same \(\beta_2\) implies a shorter "remembrance" in tokens. This means that if we hold \(\beta_2\) fixed (as is convention) the optimizer forgets faster in token time than in step time. In our results below, we show that reframing and holding the half life of \(\beta_2\) fixed allows for stable training, even down to batch size 1.</p>
+
+    <div class="figure-ph">&lt;Figure placeholder: “Run with half-life fixed vs β₂ fixed at B = 1 (Adam)”&gt;</div>
+
+    <!-- <h2>Results from our paper:</h2>
+    <ul>
+      <li>Heatmaps showing that learning rate doesn't fully scale with \root B; \(\beta_1 = 0.9\) works well across batch sizes; \(\beta_2\) fixed is a problem, but half-life<sub>2</sub> fixed is a solution</li>
+      <li>Robustness of small batch sizes</li>
+      <li>Simple optimizers do well enough when batch size is small enough</li>
+    </ul>
+
+    <h2>Practical Recommendations for the broke practitioner</h2>
+    <ul>
+      <li>We recommend that you use the largest batch size that maximizes the throughput of your cluster, and tune the \(\beta_2\) appropriately</li>
+      <li>We recommend against simulating large batch sizes using gradient accumulation</li>
+      <li>We recommend using AdaFactor as an alternative to Adam if memory is a bottleneck, as is for most academics and small labs across the world</li>
+    </ul>
+
+    <h2>Limitations and Open Questions:</h2>
+    <p>We aren't too sure why “fix token half life” for the second moment works but leaving \(\beta_1\) fixed at 0.9 is good enough</p>
+
+    <hr />
+    <p style="font-size:0.95rem;color:#666;">
+      P.S. Equations rendered via MathJax. Add your figure image(s) in place of the dashed placeholders above.
+    </p>
+  </main> -->
+
+  <footer>
+    <a href="../../index.html#Writing">← Back to Writing</a>
+  </footer>
+</body>
+</html>
