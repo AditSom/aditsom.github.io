@@ -60,6 +60,12 @@
     margin-top: 8px;
     font-style: italic;
     }
+
+    .figure img.half-width {
+    width: 50%;
+    height: auto;
+    }
+
     </style>
 
   <!-- MathJax for LaTeX equations -->
@@ -114,7 +120,7 @@
     <p>Think of each \(\beta\) as a forgetting factor on the previous estimate. For a simple EMA \(y_t = \alpha y_{t-1} + (1 - \alpha) x_t\), the weight on past data decays geometrically; the half-life \(H\) (in steps) satisfies \(\alpha^H=1/2\). In Adam's second moment equation \(v_t=\beta_2 v_{t-1}+(1-\beta_2)g_t^2\), the analogous relation is \(\beta_2^H=1/2\). So \(\beta_2\) directly sets “how many steps” of history your optimizer remembers. Shorter half-life means updates which react more towards incoming data; longer half-life means smoother updates which prioritizes information accumulated in the past.</p>
 
     <div class="figure">
-        <img src="halflife_steps.jpg" alt="Half-life effect of beta in Adam" />
+        <img src="halflife_steps.jpg" alt="Half-life effect of beta in Adam" class="half-width"/>
         <p class="caption">Figure: Effect of \(\beta\) on exponential decay / half-life in Adam.</p>
     </div>
 
@@ -153,7 +159,7 @@
 
     <!-- Fig 1a: Optimizer gap vs batch size -->
     <div class="figure">
-        <img src="optimizer_comp.jpg" alt="Optimizer vs Batch Size" />
+        <img src="optimizer_comp.jpg" alt="Optimizer vs Batch Size" class="half-width"/>
         <p class="caption">Figure: As batch size decreases, we see that all optimizers tend to perform equivalently. Small batch sizes are more robust to optimizer design.</p>
     </div>
     <p><strong>Simple optimizers work when batches are small.</strong> With small B, plain SGD (no momentum),
