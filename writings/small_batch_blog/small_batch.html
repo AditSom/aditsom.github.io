@@ -282,7 +282,7 @@
     </div>
     <p><strong>Heatmaps: learning rate does not scale as \(\sqrt{B}\); \(\beta_1\approx0.9\) is robust; and fixing the second moment half-life in tokens \(t_2\) is crucial.</strong> 
     Across batch sizes, the optimal learning rate increases far more slowly than the conventional \(\sqrt{B}\) scaling rule. The standard choice \(\beta_1 = 0.9\) performs reliably across settings. 
-    Crucualliy, holding \(\beta_2\) <em>fixed</em> implicitly changes the effective half-life as batch size varies, which harms performance at small \(B\). Instead, fixing the <em>token half-life</em> \(t_2\) produces consistent behavior across batch sizes.</p>
+    Crucially, holding \(\beta_2\) <em>fixed</em> implicitly changes the effective half-life as batch size varies, which harms performance at small \(B\). Instead, fixing the <em>token half-life</em> \(t_2\) produces consistent behavior across batch sizes.</p>
 
 
     <!-- Fig 3: Robustness curves -->
@@ -290,8 +290,8 @@
         <img src="lm30m_adam_sensitivity_1d.jpg" alt="Heatmaps" />
         <p class="caption">Figure: From the optimal configuration, we test the robustness of hyper parameters by independently changing each one. We observe that the robustness of hyper parameters improves as batch size decreases. The results are again on the 30M model trained on 600M tokens of FineWeb-Edu.</p>
     </div>
-    <p><strong>Small batches are more hyperparameter-robust.</strong> The sensitivity curves broaden dramatically as
-    B→1. At B=1 you get a wide plateau of near-optimal settings over LR, \(\beta_1\) and the second moment
+    <p><strong>Small batches are more robust to hyper parameters.</strong> The sensitivity curves broaden dramatically as
+    \(B\) tends to 1. At \(B=1\) you get a wide plateau of near-optimal settings over LR, \(\beta_1\) and the second moment
     half-life; at large B the loss rises quickly once you leave the tuned point. In practice this means fewer
     sweeps and easier hyper parameter tuning when you're running small batches.</p>
 
