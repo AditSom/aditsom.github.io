@@ -216,16 +216,26 @@
     <h3>How to set \(\beta_2\): half-life, batch size, and tokens</h3>
 
     <p>Given that we want our half-life (\(t_2\)) to be independent of batch size (B), token length (T), we set \(\beta_2\) as follows.</p>
-
-    <div class="math-display">
+    
+    <div class="math-display" style="text-align: center;">
         $$
-        \begin{aligned}
-            \beta_2 = 2^{-\frac{B \cdot T}{t_{2}}}
-        \end{aligned}
+        \boxed{
+        \displaystyle \beta_2 = 2^{-\frac{B \cdot T}{t_{2}}}
+        }
         $$
     </div>
 
-    <p>This way, regardless of change in batch size or sequence length, the half-life of the second moment with respect to total tokens remains constant.</p>
+
+    <p>This way, regardless of change in batch size or sequence length, the half-life of the second moment with respect to total tokens remains constant. Furthermore, from this arises a very nice scaling rule for \(\beta_2\) when one changes batch size:</p>
+
+    <div class="math-display" style="text-align: center;">
+        $$
+        \boxed{
+        \displaystyle \beta_2* = \beta_2 ^ {(B* / B)}
+        }
+        $$
+    </div>
+
 
     <p>In our results below, we show that reframing and holding the half-life of \(\beta_2\) fixed allows for stable training, even down to batch size 1!</p>
 
