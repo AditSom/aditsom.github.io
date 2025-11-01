@@ -248,7 +248,7 @@
     <div class="math-display" style="text-align: center;">
         $$
         \boxed{
-        \displaystyle \beta_2* = \beta_2 ^ {(B* / B)}
+        \displaystyle \beta_2^* = \beta_2 ^ {(B^* / B)}
         }
         $$
     </div>
@@ -278,7 +278,7 @@
     <!-- Fig 4: Scaling heuristics / heatmaps -->
     <div class="figure">
         <img src="hparam_scaling.jpg" alt="Heatmaps" />
-        <p class="caption">Figure: We sweep over learning rate, \(\beta_1\), and \(\beta_2\) across all batch sizes to find the most optimal configuration.</p>
+        <p class="caption">Figure: We sweep over learning rate, \(\beta_1\), and \(\beta_2\) across all batch sizes to find the most optimal configuration. This was done on FineWeb-Edu for a 30M parameter model.</p>
     </div>
     <p><strong>Heatmaps: learning rate does not scale as \(\sqrt{B}\); \(\beta_1\approx0.9\) is robust; and fixing the second moment half-life in tokens \(t_2\) is crucial.</strong> 
     Across batch sizes, the optimal learning rate increases far more slowly than the conventional \(\sqrt{B}\) scaling rule. The standard choice \(\beta_1 = 0.9\) performs reliably across settings. 
@@ -288,7 +288,7 @@
     <!-- Fig 3: Robustness curves -->
     <div class="figure">
         <img src="lm30m_adam_sensitivity_1d.jpg" alt="Heatmaps" />
-        <p class="caption">Figure: From the optimal configuration, we test the robustness of hyper parameters by independently changing each one. We observe that the robustness of hyper parameters improves as batch size decreases.</p>
+        <p class="caption">Figure: From the optimal configuration, we test the robustness of hyper parameters by independently changing each one. We observe that the robustness of hyper parameters improves as batch size decreases. The results are again on the 30M model trained on 600M tokens of FineWeb-Edu.</p>
     </div>
     <p><strong>Small batches are more hyperparameter-robust.</strong> The sensitivity curves broaden dramatically as
     B→1. At B=1 you get a wide plateau of near-optimal settings over LR, \(\beta_1\) and the second moment
@@ -308,7 +308,7 @@
 
     <h2>Practical Recommendations for the broke practitioner (aka. me)</h2>
     <ul>
-    <li><strong>Use the smallest batch size that maximizes the throughput of your cluster, and tune \(\beta_2\) appropriately.</strong>
+    <li><strong>Use the smallest batch size that maximizes the throughput (MFU) of your cluster, and tune \(\beta_2\) appropriately.</strong>
         Pick a target token half-life \(t_2\) (e.g., 10M tokens) and set \(\beta_2\) = 2<sup>-(B·T)/\(t_2\)</sup> so the second moment
         memory is constant in <em>tokens</em> as you change B or sequence length T. If you later change microbatching or
         packing, recompute \(\beta_2\) from the actual tokens per optimizer step.</li>
