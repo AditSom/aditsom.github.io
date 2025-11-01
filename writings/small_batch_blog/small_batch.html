@@ -136,12 +136,10 @@
         <img src="hparam_scaling.jpg" alt="Heatmaps" />
         <p class="caption">Figure: We sweep over learning rate, \(\beta_1\), and \(\beta_2\) across all batch sizes to find the most optimal configuration.</p>
     </div>
-    <p><strong>Heatmaps: learning rate doesn't follow √B; \(\beta_1\)≈0.9 works broadly; fix the second-moment
-    half-life in tokens (t₂) instead of fixing \(\beta_2\).</strong> Across batch sizes, the LR that minimizes loss grows
-    much more slowly than the usual √B rule. The default \(\beta_1\)=0.9 is consistently good. Crucially, keeping
-    \(\beta_2\) <em>fixed</em> degrades as batches shrink, while holding the <em>token half-life</em> of the second-moment
-    (t₂) fixed aligns behavior and lowers loss at small B. (This is exactly the “measure memory in tokens,
-    not steps” effect.)</p>
+    <p><strong>Heatmaps: learning rate does not scale as \(\sqrt{B}\); \(\beta_1\approx0.9\) is robust; and fixing the second moment half-life in tokens \(t_2\) is crucial.</strong> 
+    Across batch sizes, the optimal learning rate increases far more slowly than the conventional \(\sqrt{B}\) scaling rule. The standard choice \(\beta_1 = 0.9\) performs reliably across settings. 
+    Crucualliy, holding \(\beta_2\) <em>fixed</em> implicitly changes the effective half-life as batch size varies, which harms performance at small \(B\). Instead, fixing the <em>token half-life</em> \(t_2\) produces consistent behavior across batch sizes.</p>
+
 
     <!-- Fig 3: Robustness curves -->
     <div class="figure">
@@ -149,7 +147,7 @@
         <p class="caption">Figure: From the optimal configuration, we test the robustness of hyper parameters by independently changing each one. We observe that the robustness of hyper parameters improves as batch size decreases.</p>
     </div>
     <p><strong>Small batches are more hyperparameter-robust.</strong> The sensitivity curves broaden dramatically as
-    B→1. At B=1 you get a wide plateau of near-optimal settings over LR, \(\beta_1\) and the second-moment
+    B→1. At B=1 you get a wide plateau of near-optimal settings over LR, \(\beta_1\) and the second moment
     half-life; at large B the loss rises quickly once you leave the tuned point. In practice this means fewer
     sweeps and easier hyper parameter tuning when you're running small batches.</p>
 
