@@ -40,6 +40,28 @@
       h2 { font-size: 1.25rem; }
     }
   </style>
+  <style>
+    .figure {
+    text-align: center;
+    margin: 24px 0;
+    }
+
+    .figure img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    border-radius: 6px; /* optional nice edges */
+    }
+
+    .figure .caption {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 8px;
+    font-style: italic;
+    }
+    </style>
+
   <!-- MathJax for LaTeX equations -->
   <script async id="MathJax-script"
     src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
@@ -74,16 +96,14 @@
 
     <p>Where \(0 \le \alpha \le 1\) sets how quickly the past is forgotten. Smaller \(\alpha\) means you trust the latest observation more, and larger \(\alpha\) means a longer remembrance of history. This "remembrance" can also be expressed in terms of half-life (the number of steps after which the effect of a particular observation halves its contribution to the update).</p>
 
-    <p>Adam uses these EMAs too. In its simplest unbiased form,</p>
+    <p>Adam uses these EMAs too. In its simplest form,</p>
 
     <div class="math-display">
     $$
     \begin{aligned}
     m_t &= \beta_1\, m_{t-1} + (1-\beta_1)\, g_t, \\[8pt]
     v_t &= \beta_2\, v_{t-1} + (1-\beta_2)\, g_t^{\,2}, \\[8pt]
-    \hat m_t &= \frac{m_t}{1-\beta_1^{\,t}}, \\[8pt]
-    \hat v_t &= \frac{v_t}{1-\beta_2^{\,t}}, \\[12pt]
-    \theta_{t+1} &= \theta_t - \eta \,\frac{\hat m_t}{\sqrt{\hat v_t} + \varepsilon}\,.
+    \theta_{t+1} &= \theta_t - \eta \,\frac{m_t}{\sqrt{v_t} + \varepsilon}\,.
     \end{aligned}
     $$
     </div>
