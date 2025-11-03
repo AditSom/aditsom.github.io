@@ -264,8 +264,6 @@
         </div>
     </div>
 
-
-
     <p>In our results below, we show that reframing and holding the half-life of \(\beta_2\) fixed allows for stable training, even down to batch size 1!</p>
 
     <div class="figure">
@@ -322,6 +320,17 @@
         In the small-batch regime it matches strong baselines while keeping a tiny optimizer state, letting you fit
         larger models or longer context windows. It pairs naturally with the token half-life view.</li>
     </ul>
+
+    <h2>To Recap</h2>
+    <p>
+      Training LLMs is expensive. Model trainers usually use their hardware to the limit, making sure no resource goes underutilized. For most practitioners, GPU memory is the biggest bottleneck.
+      Given that one has only a certain amount of GPU memory, one must <em>wisely</em> choose where to spend it on. Do I train a bigger model? Do I train with a large batch size? Do I use a more complex optimizer?
+    </p>
+
+    <p>
+      In our work, we show that the prevailing assumption that large batch sizes are a necessity to train LLMs is false. We show stable training with small batch sizes by holding the half-life of \(\beta_2\) in Adam fixed.
+      we further find that small batch sizes are more robust to hyper parameter misspecifications, and as batch sizes get smaller, complex optimizers with large optimizer states become unnecessary.
+    </p>
 
     <div class="bibtex-block">
         <button class="copy-btn" onclick="copyBibtex()">Copy</button>
