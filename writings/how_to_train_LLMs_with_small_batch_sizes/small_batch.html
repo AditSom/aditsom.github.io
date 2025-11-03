@@ -151,14 +151,11 @@
 
   <script>
     function copyBibtex() {
-    const bibtex = `@misc{marek2025smallbatchsizetraining,
-    title={Small Batch Size Training for Language Models: When Vanilla SGD Works, and Why Gradient Accumulation Is Wasteful},
-    author={Martin Marek and Sanae Lotfi and Aditya Somasundaram and Andrew Gordon Wilson and Micah Goldblum},
-    year={2025},
-    eprint={2507.07101},
-    archivePrefix={arXiv},
-    primaryClass={cs.LG},
-    url={https://arxiv.org/abs/2507.07101}
+    const bibtex = `@article{marek2025small,
+      title={Small batch size training for language models: When vanilla sgd works, and why gradient accumulation is wasteful},
+      author={Marek, Martin and Lotfi, Sanae and Somasundaram, Aditya and Wilson, Andrew Gordon and Goldblum, Micah},
+      journal={arXiv preprint arXiv:2507.07101},
+      year={2025}
     }`;
     navigator.clipboard.writeText(bibtex);
     alert("BibTeX copied!");
@@ -298,10 +295,10 @@
         <img src="optimizer_comp.jpg" alt="Optimizer vs Batch Size" class="half-width"/>
         <p class="caption">Figure: As batch size decreases, we see that all optimizers tend to perform equivalently. Small batch sizes are more robust to optimizer design.</p>
     </div>
-    <p><strong>Simple optimizers work when batches are small.</strong> With small B, plain SGD (no momentum),
-    Adafactor, Adam and Muon land at similar loss; as B grows, the gap between simple and sophisticated
-    optimizers widens. The small-batch regime lets you drop optimizer state without giving up performance,
-    which is great for memory-constrained runs.</p>
+    <p><strong>Simple optimizers work when batches are small.</strong> With small \(B\), plain SGD (no momentum),
+    Adafactor, Adam and Muon land at similar loss; as \(B\) grows, the gap between simple and sophisticated
+    optimizers widens. The small batch regime lets you drop optimizer state without giving up performance,
+    which is great for memory constrained runs.</p>
 
 
     <h2>Practical recommendations for the broke practitioner (aka. me)</h2>
@@ -335,14 +332,11 @@
     <div class="bibtex-block">
         <button class="copy-btn" onclick="copyBibtex()">Copy</button>
 
-        <pre><code>@misc{marek2025smallbatchsizetraining,
-        title={Small Batch Size Training for Language Models: When Vanilla SGD Works, and Why Gradient Accumulation Is Wasteful},
-        author={Martin Marek and Sanae Lotfi and Aditya Somasundaram and Andrew Gordon Wilson and Micah Goldblum},
-        year={2025},
-        eprint={2507.07101},
-        archivePrefix={arXiv},
-        primaryClass={cs.LG},
-        url={https://arxiv.org/abs/2507.07101}
+        <pre><code>@article{marek2025small,
+          title={Small batch size training for language models: When vanilla sgd works, and why gradient accumulation is wasteful},
+          author={Marek, Martin and Lotfi, Sanae and Somasundaram, Aditya and Wilson, Andrew Gordon and Goldblum, Micah},
+          journal={arXiv preprint arXiv:2507.07101},
+          year={2025}
         }</code></pre>
     </div>
 
