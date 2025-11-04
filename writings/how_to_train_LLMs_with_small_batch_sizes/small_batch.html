@@ -162,9 +162,14 @@
     }
 
     .katex-display {
-    text-align: left !important;
+      display: flex;
+      justify-content: center;
     }
-    
+
+    .katex-display > .katex {
+      text-align: left;
+    }
+
   </style>
 
   <!-- MathJax for LaTeX equations -->
@@ -307,7 +312,7 @@
         <p class="caption">Figure: From the optimal configuration, we test the robustness of hyper parameters by independently changing each one. We observe that the robustness of hyper parameters improves as batch size decreases. The results are again on the 30M model trained on 600M tokens of FineWeb-Edu.</p>
     </div>
     <p><strong>Small batches are more robust to hyper parameters.</strong> The sensitivity curves broaden dramatically as
-    \(B\) tends to 1. At \(B=1\) you get a wide plateau of near-optimal settings over LR, \(\beta_1\) and the second moment
+    \(B\) tends to \(1\). At \(B=1\) you get a wide plateau of near-optimal settings over LR, \(\beta_1\) and the second moment
     half-life; at large \(B\) the loss rises quickly once you leave the tuned point. In practice this means fewer
     sweeps and easier hyper parameter tuning when you're running small batches.</p>
 
