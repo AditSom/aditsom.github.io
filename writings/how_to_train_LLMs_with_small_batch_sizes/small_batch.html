@@ -166,20 +166,32 @@
       text-align: left;
     }
 
-    .bibtex-block {
-      max-width: 600px;          
-      font-size: 0.85rem;       
-    }
-
-    .bibtex-block pre {
-      overflow-x: auto;
-      white-space: pre-wrap;
-      background: #f6f8fa; 
-      padding: 12px;
+    .bibtex-box {
+      position: relative;
+      border: 1px solid #ccc;
+      background: #fafafa;
+      padding: 12px 12px 12px 12px;
       border-radius: 6px;
-      border: 1px solid #ddd;
+      font-size: 14px;
+      margin-top: 1em;
+      overflow-x: auto;
     }
 
+    .copy-bibtex-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #eee;
+      border: 1px solid #ccc;
+      padding: 4px 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .copy-bibtex-btn:hover {
+      background: #e0e0e0;
+}
 
   </style>
 
@@ -421,15 +433,16 @@
           year={2025}
         }</code></pre>
     </div> -->
-    <pre><code>@article{marek2025small,
+<div class="bibtex-box">
+  <button class="copy-bibtex-btn" onclick="copyBibtex()">Copy</button>
+<pre><code>@article{marek2025small,
   title={Small batch size training for language models: When vanilla SGD works, and why gradient accumulation is wasteful},
   author={Marek, Martin and Lotfi, Sanae and Somasundaram, Aditya and Wilson, Andrew Gordon and Goldblum, Micah},
   journal={arXiv preprint arXiv:2507.07101},
   year={2025}
 }
 </code></pre>
-
-<p><a href="#" onclick="copyBibtex(); return false;">Copy BibTeX</a></p>
+</div>
 
 <script>
 function copyBibtex() {
@@ -440,7 +453,6 @@ const bibtex = `@article{marek2025small,
   year={2025}
 }`;
 navigator.clipboard.writeText(bibtex);
-alert("BibTeX copied!");
 }
 </script>
 
