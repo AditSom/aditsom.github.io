@@ -239,7 +239,7 @@
     $$
     </div>
 
-    <p>Where \(g_t\) is the gradient at time step \(t\), \(\beta_1\) controls the first moment, \(\beta_2\) controls the second moment.</p>
+    <p>Where \(g_t\) is the gradient at time step \(t\), \(\beta_1\) controls the momentum (first moment), \(\beta_2\) controls the preconditioning (second moment).</p>
 
     <h3>What do the \(\beta\)s do?</h3>
     <p>Think of each \(\beta\) as a forgetting factor on the previous estimate. For a simple EMA \(y_t = \alpha y_{t-1} + (1 - \alpha) x_t\), the weight on past data decays geometrically; the half-life \(H\) (in steps) satisfies \(\alpha^H=1/2\). In Adam's second moment equation \(v_t=\beta_2 v_{t-1}+(1-\beta_2)g_t^2\), the analogous relation is \(\beta_2^H=1/2\). So \(\beta_2\) directly sets “how many steps” of history your optimizer remembers. Shorter half-life means updates which react more towards incoming data; longer half-life means smoother updates which prioritizes information accumulated in the past.</p>
@@ -361,7 +361,7 @@
     </blockquote>
 
     <p>There is something fundamentally different about preconditioning (second moment) compared to momentum (first moment), which gives rise to our discovery and optimization results. A better theoretical understanding of EMA and what each moment
-      means would help us understand Adam, and subsequently learning algorithms, better.</p>
+      means would help us understand Adam, and by extension, learning algorithms, better.</p>
 
 
     <h2>To Recap</h2>
