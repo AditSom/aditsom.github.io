@@ -209,7 +209,8 @@
     <!-- Optional meta line; keep or remove -->
     <div class="meta">Posted on November 1st 2025 • by Aditya Somasundaram</div>
 
-    <p>Everyone “knows” that to train large language models you need large batch sizes. Bigger batches mean less gradient noise, better training stability, lower final loss; so the bigger the batch, the better the model. It's a simple, causal story. But there's more than meets the eye. In this post, I will show results suggesting that what appears to be a “batch-size effect” is often a <em>remembrance effect</em> in the optimizer.</p>
+    <p>Everyone “knows” that to train large language models you need large batch sizes. Bigger batches mean less gradient noise, better training stability, lower final loss; so the bigger the batch, the better the model. 
+      It's a simple, causal story. But the situation is a bit more subtle. In what follows, we'll see that this apparent (and false) necessity for large batches are, in fact, consequences of how much history the optimizer retains.</p>
 
     <div class="cta-container">
         <a class="cta-button" href="https://arxiv.org/abs/2507.07101" target="_blank">
