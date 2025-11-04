@@ -191,6 +191,32 @@
 
     .copy-bibtex-btn:hover {
       background: #e0e0e0;
+        
+          .sidenote-marker {
+      font-size: 0.8em;
+      vertical-align: super;
+      cursor: pointer;
+    }
+
+    .sidenote {
+      position: absolute;
+      margin-left: 60%;
+      width: 30%;
+      font-size: 0.9em;
+      color: #555;
+      line-height: 1.4;
+    }
+
+    @media(max-width: 900px) {
+      .sidenote {
+        position: static;
+        display: block;
+        margin-left: 0;
+        width: 100%;
+        font-style: italic;
+      }
+    }
+
 }
 
   </style>
@@ -235,8 +261,10 @@
     <p>
       Everyone “knows” that to train large language models you need large batch sizes. Bigger batches mean less gradient noise, better training stability, lower final loss; so the bigger the batch, the better the model. 
       Or so the folklore goes. In what follows, we'll see that this apparent (and false) necessity for large batches is, in fact, a consequence of how much <em>history</em> the optimizer retains.
-      In reality, we find that small batches converge faster, are easier to tune, and use less memory — all while matching performance.
+      In reality, we find that small batches converge faster<span class="sidenote-marker">*</span>, are easier to tune, and use less memory — all while matching performance.
     </p>
+
+    <span class="sidenote">* on a per-FLOP basis</span>
 
     <p>
       <em>This post distills findings from our NeurIPS paper, where we study the small batch regime in LLM pretraining.</em>
