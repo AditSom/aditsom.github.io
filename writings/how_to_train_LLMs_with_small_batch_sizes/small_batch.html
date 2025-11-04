@@ -317,6 +317,26 @@
         larger models or longer context windows. It pairs naturally with the token half-life view.</li>
     </ul>
 
+    <h2>Open Questions</h2>
+    <!-- <p>
+      While we do find that scaling \(\beta_2\) to ensure half-life is fixed helps stabilize training, it is understandably strange (at least personally) that \(\beta_1 = 0.9\) works well for all batch sizes.
+      As Jeremy Bernstein and Laker Newhouse point out in their paper "EMA can then be thought of as “smoothing out” the algorithm, or making it more robust to mini-batch noise, although nailing down the precise role of EMA is perhaps still an open problem."
+      There is something fundamentally different about preconditioning (second moment) compared to momentum (first moment), which gives rise to our discovery and optimization results. A better theoretical understanding of EMA and what each moment
+      means would help us understand Adam, and subsequently learning algorithms, better.
+    </p>  -->
+
+    <p>While we do find that scaling \(\beta_2\) to ensure half-life is fixed helps stabilize training, it is admittedly surprising (at least personally) that \(\beta_1 = 0.9\) works well across batch sizes.</p>
+
+    <p>As <a href="https://arxiv.org/abs/2409.20325" class="cite" title="Old Optimizer, New Norm: An Anthology">Jeremy Bernstein and Laker Newhouse</a> comment:</p>
+
+    <blockquote>
+      <em>“EMA can then be thought of as "smoothing out" the algorithm, or making it more robust to mini-batch noise, although nailing down the precise role of EMA is perhaps still an open problem.”</em>
+    </blockquote>
+
+    <p>There is something fundamentally different about preconditioning (second moment) compared to momentum (first moment), which gives rise to our discovery and optimization results. A better theoretical understanding of EMA and what each moment
+      means would help us understand Adam, and subsequently learning algorithms, better.</p>
+
+
     <h2>To Recap</h2>
     <p>
       Training LLMs is expensive. Model trainers usually use their hardware to the limit, making sure no resource goes underutilized. For most practitioners, GPU memory is the biggest bottleneck.
