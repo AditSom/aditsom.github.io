@@ -302,7 +302,7 @@
       The emerging pattern is consistent: small batches simplify optimization, while several familiar scaling rules bend or break.
     </p>
 
-    <h4>Scanning the landscape: \(\beta_2, \beta_2\) and learning rate</h4>
+    <h4>Scanning the Landscape: \(\beta_2, \beta_2\) and Learning Rate</h4>
 
     <p><strong>\(\beta_1\approx0.9\) is robust; and fixing the second moment half-life in tokens \(t_2\) is crucial.</strong> 
     Across batch sizes, the optimal learning rate increases far more slowly than the conventional \(\sqrt{B}\) scaling rule. The standard choice \(\beta_1 = 0.9\) performs reliably across settings. 
@@ -314,26 +314,31 @@
         <p class="caption">Figure: We sweep over learning rate, \(\beta_1\), and \(\beta_2\) across all batch sizes to find the most optimal configuration. This was done on FineWeb-Edu for a 30M parameter model.</p>
     </div>
 
+    <h4>Hyperparameter Sensitivity across Batch Sizes</h4>
+
+    <p><strong>Small batches are more robust to hyper parameters.</strong> The sensitivity curves broaden dramatically as
+    \(B\) tends to \(1\). At \(B=1\) you get a wide plateau of near-optimal settings over LR, \(\beta_1\) and the second moment
+    half-life; at large \(B\) the loss rises quickly once you leave the tuned point. In practice this means fewer
+    sweeps and easier hyper parameter tuning when you're running small batches.</p>
+
     <!-- Fig 3: Robustness curves -->
     <div class="figure">
         <img src="lm30m_adam_sensitivity_1d.jpg" alt="Heatmaps" />
         <p class="caption">Figure: From the optimal configuration, we test the robustness of hyper parameters by independently changing each one. We observe that the robustness of hyper parameters improves as batch size decreases. The results are again on the 30M model trained on 600M tokens of FineWeb-Edu.</p>
     </div>
-    <p><strong>Small batches are more robust to hyper parameters.</strong> The sensitivity curves broaden dramatically as
-    \(B\) tends to \(1\). At \(B=1\) you get a wide plateau of near-optimal settings over LR, \(\beta_1\) and the second moment
-    half-life; at large \(B\) the loss rises quickly once you leave the tuned point. In practice this means fewer
-    sweeps and easier hyper parameter tuning when you're running small batches.</p>
+
+    <h4>Simple Optimizers Prove Sufficient</h4>
+
+    <p><strong>Simple optimizers work when batches are small.</strong> With small \(B\), plain SGD (no momentum),
+    Adafactor, Adam and Muon land at similar loss; as \(B\) grows, the gap between simple and sophisticated
+    optimizers widens. The small batch regime lets you drop optimizer state without giving up performance,
+    which is great for memory constrained runs.</p>
 
     <!-- Fig 1a: Optimizer gap vs batch size -->
     <div class="figure">
         <img src="optimizer_comp.jpg" alt="Optimizer vs Batch Size" class="half-width"/>
         <p class="caption">Figure: As batch size decreases, we see that all optimizers tend to perform equivalently. Small batch sizes are more robust to optimizer design.</p>
     </div>
-    <p><strong>Simple optimizers work when batches are small.</strong> With small \(B\), plain SGD (no momentum),
-    Adafactor, Adam and Muon land at similar loss; as \(B\) grows, the gap between simple and sophisticated
-    optimizers widens. The small batch regime lets you drop optimizer state without giving up performance,
-    which is great for memory constrained runs.</p>
-
 
     <h2>Practical recommendations for the broke practitioner (aka. me)</h2>
     <ul>
