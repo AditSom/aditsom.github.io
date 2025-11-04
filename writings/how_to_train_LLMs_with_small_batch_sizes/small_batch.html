@@ -209,18 +209,24 @@
     <!-- Optional meta line; keep or remove -->
     <div class="meta">Posted on November 1st 2025 • by Aditya Somasundaram</div>
 
-    <p>Everyone “knows” that to train large language models you need large batch sizes. Bigger batches mean less gradient noise, better training stability, lower final loss; so the bigger the batch, the better the model. 
-      It's a simple story. But the situation is a bit more subtle. In what follows, we'll see that this apparent (and false) necessity for large batches are, in fact, consequences of how much <em>history</em> the optimizer retains.</p>
+    <p>
+      Everyone “knows” that to train large language models you need large batch sizes. Bigger batches mean less gradient noise, better training stability, lower final loss; so the bigger the batch, the better the model. 
+      Or so the folklore goes. In what follows, we'll see that this apparent (and false) necessity for large batches is, in fact, a consequence of how much <em>history</em> the optimizer retains.
+      In reality, we find that small batches converge faster, are easier to tune, and use less memory — all while matching performance.
+    </p>
+
+    <p>
+      <em>This post distills findings from our NeurIPS paper, where we study the small batch regime in LLM pretraining.</em>
+    </p>
 
     <div class="cta-container">
         <a class="cta-button" href="https://arxiv.org/abs/2507.07101" target="_blank">
-            Check out the paper (joint with fantastic collaborators)
+            Check out my paper
             &nbsp;→
         </a>
     </div>
 
-
-    <p>Most modern optimizers keep exponential moving averages (EMAs) while stepping through parameter space. Intuitively: the model's movement at the current point is blended with what it has seen before. A scalar EMA for a stream \(x_t\) looks like</p>
+    <p>Most modern optimizers keep exponential moving averages (EMAs) while stepping through parameter space. Intuitively: the model's movement at the current point is weighted with what it has seen before. A scalar EMA for a stream \(x_t\) looks like</p>
 
     <div class="math-display">$$
     y_t = \alpha\, y_{t-1} + (1 - \alpha)\, x_t
@@ -283,7 +289,7 @@
 
         <div class="math-display" style="text-align: center; font-size: 1.2em;">
         $$
-        \beta_2^* = 0.95^{\frac{1}{512}} \approx 0.99989
+        \beta_2^* = 0.95^{\frac{1}{512}} \approx 0.9999
         $$
         </div>
     </div>
