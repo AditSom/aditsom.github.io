@@ -411,7 +411,7 @@
       we further find that small batch sizes are more robust to hyper parameter misspecifications, and as batch sizes get smaller, complex optimizers with large optimizer states become unnecessary.
     </p>
 
-    <div class="bibtex-block">
+    <!-- <div class="bibtex-block">
         <button class="copy-btn" onclick="copyBibtex()">Copy</button>
 
         <pre><code>@article{marek2025small,
@@ -420,7 +420,29 @@
           journal={arXiv preprint arXiv:2507.07101},
           year={2025}
         }</code></pre>
-    </div>
+    </div> -->
+    <pre><code>@article{marek2025small,
+  title={Small batch size training for language models: When vanilla SGD works, and why gradient accumulation is wasteful},
+  author={Marek, Martin and Lotfi, Sanae and Somasundaram, Aditya and Wilson, Andrew Gordon and Goldblum, Micah},
+  journal={arXiv preprint arXiv:2507.07101},
+  year={2025}
+}
+</code></pre>
+
+<p><a href="#" onclick="copyBibtex(); return false;">Copy BibTeX</a></p>
+
+<script>
+function copyBibtex() {
+const bibtex = `@article{marek2025small,
+  title={Small batch size training for language models: When vanilla SGD works, and why gradient accumulation is wasteful},
+  author={Marek, Martin and Lotfi, Sanae and Somasundaram, Aditya and Wilson, Andrew Gordon and Goldblum, Micah},
+  journal={arXiv preprint arXiv:2507.07101},
+  year={2025}
+}`;
+navigator.clipboard.writeText(bibtex);
+alert("BibTeX copied!");
+}
+</script>
 
   </main>
 
