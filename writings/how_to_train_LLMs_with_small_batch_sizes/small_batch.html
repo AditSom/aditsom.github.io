@@ -261,7 +261,7 @@
     <p>
       Everyone “knows” that to train large language models you need large batch sizes. Bigger batches mean less gradient noise, better training stability, lower final loss; so the bigger the batch, the better the model. 
       Or so the folklore goes. In what follows, we'll see that this apparent (and false) necessity for large batches is, in fact, a consequence of how much <em>history</em> the optimizer retains.
-      In reality, we find that small batches converge faster<span class="sidenote-marker">*</span>, are easier to tune, and use less memory — all while matching performance.
+      In reality, we find that small batches converge faster<span class="sidenote-marker">*</span>, are easier to tune, and use less memory — all while maintaining performance.
     </p>
 
     <span class="sidenote">* on a per-FLOP basis</span>
@@ -416,7 +416,7 @@
         optimizer step (microbatch_tokens \(\times\) accumulation_steps) so \(t_2\) stays fixed.</li>
 
     <li><strong>Use Adafactor if memory is the bottleneck.</strong>
-        In the small-batch regime it matches strong baselines while keeping a tiny optimizer state, letting you fit
+        In the small batch regime it matches strong baselines while keeping a tiny optimizer state, letting you fit
         larger models or longer context windows. It pairs naturally with the token half-life view.</li>
     </ul>
 
