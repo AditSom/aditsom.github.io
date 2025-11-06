@@ -421,13 +421,6 @@
     </ul>
 
     <h2>Open Questions</h2>
-    <!-- <p>
-      While we do find that scaling \(\beta_2\) to ensure half-life is fixed helps stabilize training, it is understandably strange (at least personally) that \(\beta_1 = 0.9\) works well for all batch sizes.
-      As Jeremy Bernstein and Laker Newhouse point out in their paper "EMA can then be thought of as “smoothing out” the algorithm, or making it more robust to mini-batch noise, although nailing down the precise role of EMA is perhaps still an open problem."
-      There is something fundamentally different about preconditioning (second moment) compared to momentum (first moment), which gives rise to our discovery and optimization results. A better theoretical understanding of EMA and what each moment
-      means would help us understand Adam, and subsequently learning algorithms, better.
-    </p>  -->
-
     <p>While we do find that scaling \(\beta_2\) to ensure half-life is fixed helps stabilize training, it is admittedly surprising (at least personally) that \(\beta_1 = 0.9\) works well across batch sizes.</p>
 
     <p>As <a href="https://arxiv.org/abs/2409.20325" class="cite" title="Old Optimizer, New Norm: An Anthology">Jeremy Bernstein and Laker Newhouse</a> comment:</p>
@@ -448,41 +441,37 @@
 
     <p>
       In our work, we show that the prevailing assumption that large batch sizes are a necessity to train LLMs is false. We show stable training with small batch sizes by holding the half-life of \(\beta_2\) in Adam fixed.
-      we further find that small batch sizes are more robust to hyper parameter misspecifications, and as batch sizes get smaller, complex optimizers with large optimizer states become unnecessary.
+      We further find that small batch sizes are more robust to hyper parameter misspecifications, and as batch sizes get smaller, complex optimizers with large optimizer states become unnecessary.
     </p>
 
-    <!-- <div class="bibtex-block">
-        <button class="copy-btn" onclick="copyBibtex()">Copy</button>
+    <p style="text-align: center; font-style: italic; font-size: 0.9em;">
+      This work was done in collaboration with truly fantastic colleagues. 
+      If it helps or inspires your own training efforts, please consider citing us!
+    </p>
 
-        <pre><code>@article{marek2025small,
-          title={Small batch size training for language models: When vanilla sgd works, and why gradient accumulation is wasteful},
-          author={Marek, Martin and Lotfi, Sanae and Somasundaram, Aditya and Wilson, Andrew Gordon and Goldblum, Micah},
-          journal={arXiv preprint arXiv:2507.07101},
-          year={2025}
-        }</code></pre>
-    </div> -->
-<div class="bibtex-box">
-  <button class="copy-bibtex-btn" onclick="copyBibtex()">Copy</button>
-<pre><code>@article{marek2025small,
-  title={Small batch size training for language models: When vanilla SGD works, and why gradient accumulation is wasteful},
-  author={Marek, Martin and Lotfi, Sanae and Somasundaram, Aditya and Wilson, Andrew Gordon and Goldblum, Micah},
-  journal={arXiv preprint arXiv:2507.07101},
-  year={2025}
-}
-</code></pre>
-</div>
 
-<script>
-function copyBibtex() {
-const bibtex = `@article{marek2025small,
-  title={Small batch size training for language models: When vanilla SGD works, and why gradient accumulation is wasteful},
-  author={Marek, Martin and Lotfi, Sanae and Somasundaram, Aditya and Wilson, Andrew Gordon and Goldblum, Micah},
-  journal={arXiv preprint arXiv:2507.07101},
-  year={2025}
-}`;
-navigator.clipboard.writeText(bibtex);
-}
-</script>
+    <div class="bibtex-box">
+      <button class="copy-bibtex-btn" onclick="copyBibtex()">Copy</button>
+    <pre><code>@article{marek2025small,
+      title={Small batch size training for language models: When vanilla SGD works, and why gradient accumulation is wasteful},
+      author={Marek, Martin and Lotfi, Sanae and Somasundaram, Aditya and Wilson, Andrew Gordon and Goldblum, Micah},
+      journal={arXiv preprint arXiv:2507.07101},
+      year={2025}
+    }
+    </code></pre>
+    </div>
+
+    <script>
+    function copyBibtex() {
+    const bibtex = `@article{marek2025small,
+      title={Small batch size training for language models: When vanilla SGD works, and why gradient accumulation is wasteful},
+      author={Marek, Martin and Lotfi, Sanae and Somasundaram, Aditya and Wilson, Andrew Gordon and Goldblum, Micah},
+      journal={arXiv preprint arXiv:2507.07101},
+      year={2025}
+    }`;
+    navigator.clipboard.writeText(bibtex);
+    }
+    </script>
 
   </main>
 
