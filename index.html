@@ -36,7 +36,7 @@
         left: 0;
         width: 100%;
         background-color: #ffffff;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        box-shadow: 0 1px 5px rgba(0,0,0,0.1); /* Slightly softer shadow to match al-folio */
         z-index: 1000;
         padding: 15px 0;
       }
@@ -48,7 +48,9 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        gap: 20px;
+        gap: 25px;
+        /* Clean al-folio style system font */
+        font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", "Helvetica Neue", "Arial", sans-serif;
       }
       
       .nav-links li {
@@ -57,8 +59,10 @@
       
       .nav-links a {
         text-decoration: none;
-        font-weight: bold;
-        color: #333;
+        font-weight: 400; /* Lighter weight for that modern academic look */
+        color: #555555;
+        font-size: 16px;
+        letter-spacing: 0.3px;
         transition: color 0.2s ease-in-out;
       }
       
@@ -158,11 +162,8 @@
       }
       
       .latest-news {
-        background: #f8f9fa; 
-        border-left: 4px solid #007acc; 
-        padding: 15px 20px; 
+        padding: 10px 0; 
         margin-bottom: 25px; 
-        border-radius: 6px;
         text-align: left;
         max-width: 870px;
         width: 100%;
@@ -213,7 +214,7 @@
 
       <div class="row news-wrapper">
         <div class="latest-news">
-          <h4 style="margin-top: 0; color: #007acc; text-align: center;">Latest News</h4>
+          <h4 style="margin-top: 0; text-align: center; font-weight: bold;">Latest News</h4>
           <p>
             🎓 I graduated from Columbia University with my Master's in Electrical Engineering, graduating with Honors and a research specialization! Huge thanks to <a href="https://goldblum.github.io/" target="_blank">Micah Goldblum</a> for his continued advice and mentorship during my time in his group. I have now joined the pretraining team at the <a href="https://ifm.ai/" target="_blank">Institute of Foundation Models</a>!
           </p>
