@@ -5,20 +5,40 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>How to train LLMs with small batch sizes?</title>
   <meta name="description" content="Blog post on small batch training for LLMs: EMA intuition, token half-life, results, and practical recommendations." />
-  <link rel="icon" href="../../AS.png" />
+  
+  <link rel="icon" type="image/png" href="../../AS.png" />
+  
   <style>
     :root { --maxw: 820px; }
     body {
-      margin: 0; padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+      margin: 0; padding: 0; padding-top: 70px; /* Accounts for fixed navbar */
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Noto Sans", sans-serif;
       line-height: 1.6; color: #111; background: #fff;
     }
-    header, main, footer { width: min(100%, var(--maxw)); margin: 0 auto; }
-    header { padding: 24px 16px 8px; }
-    nav a {
-      margin-right: 14px; text-decoration: none; color: #0366d6;
+    
+    /* Fixed Navigation Bar injected into the blog */
+    .fixed-navbar {
+      position: fixed; top: 0; left: 0; width: 100%;
+      background-color: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      z-index: 1000; padding: 15px 0; text-align: center;
     }
-    nav a:hover { text-decoration: underline; }
+    .nav-links {
+      list-style: none; padding: 0; margin: 0; display: flex;
+      flex-wrap: wrap; justify-content: center; gap: 20px;
+    }
+    .nav-links li { display: inline; }
+    .nav-links a {
+      text-decoration: none; font-weight: bold; color: #333;
+      transition: color 0.2s ease-in-out; font-family: -apple-system, sans-serif;
+    }
+    .nav-links a:hover { color: #007acc; }
+
+    /* Blog Header */
+    .blog-header { text-align: center; margin-top: 10px; padding: 0 16px; }
+    .blog-header h1 { font-size: 2em; margin: 0; }
+    .blog-header p { margin: 5px 0 20px 0; color: #333; }
+
+    main, footer { width: min(100%, var(--maxw)); margin: 0 auto; }
     h1, h2, h3 { line-height: 1.25; }
     h1 { font-size: 1.9rem; margin: 24px 0 12px; }
     h2 { font-size: 1.4rem; margin-top: 28px; }
@@ -28,234 +48,69 @@
     pre, code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
     .post { padding: 0 16px 48px; }
     .meta { color: #666; font-size: 0.95rem; margin: 4px 0 24px; }
-    .figure-ph {
-      border: 2px dashed #ccc; border-radius: 8px; padding: 16px; margin: 16px 0;
-      background: #fafafa; color: #777; text-align: center; font-size: 0.95rem;
-    }
+    .figure-ph { border: 2px dashed #ccc; border-radius: 8px; padding: 16px; margin: 16px 0; background: #fafafa; color: #777; text-align: center; font-size: 0.95rem; }
     hr { border: none; border-top: 1px solid #eee; margin: 28px 0; }
     footer { padding: 24px 16px 48px; color: #666; }
-    /* Mobile tweak */
+    
     @media (max-width: 600px) {
       h1 { font-size: 1.6rem; }
       h2 { font-size: 1.25rem; }
     }
-  </style>
-  <style>
-    .figure {
-    text-align: center;
-    margin: 24px 0;
-    }
-
-    .figure img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 0 auto;
-    border-radius: 6px;
-    }
-
-    .figure .caption {
-    font-size: 0.9rem;
-    color: #666;
-    margin-top: 8px;
-    font-style: italic;
-    }
-
-    .figure img.half-width {
-    width: 50%;
-    height: auto;
-    }
-
-    .figure-75 {
-    width: 75%;
-    height: auto;
-    }
-
-    .bibtex-block {
-    position: relative;
-    margin-top: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 1rem;
-    background: #fafafa;
-    }
-
-    .copy-btn {
-      float: right;
-      margin-bottom: 4px;
-      font-size: 0.8rem;
-      padding: 4px 8px;
-    }
-
-
-    pre {
-    margin: 0;
-    overflow-x: auto;
-    }
-
-    .cta-container {
-    text-align: center;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-    }
-
-
-    .cta-button {
-    display: inline-block;
-    padding: 12px 22px;
-    background-color: #e7f1ff;
-    border: 1px solid #c5ddfb;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 500;
-    text-decoration: none;
-    color: #000000;
-    transition: all 0.18s ease;
-    }
-
-    .cta-button:hover {
-    background-color: #d8e9ff;
-    border-color: #b5d0f8;
-    transform: translateY(-1px);
-    }
-
-    .cta-button:active {
-    transform: translateY(0);
-    }
-
-    .worked-example {
-    border-left: 4px solid #1f78ff;
-    background-color: #f0f8ff;
-    padding: 12px 16px;
-    margin: 1.5rem 0;
-    border-radius: 6px;
-    }
-
-    .worked-example p {
-    margin: 0 0 12px 0;
-    }
-
-    .math-display {
-    margin-top: 8px;
-    }
-
-    .cite {
-      text-decoration: none;
-      border-bottom: 1px dashed #6a9be8;
-      color: #0b63c2;
-    }
-
-    .cite:hover {
-      text-decoration: underline;
-    }
-
-    blockquote {
-      margin-left: 1.2em;
-      padding-left: 1em;
-      border-left: 3px solid #cfe1ff;
-      color: #333;
-      font-style: italic;
-    }
-
-    .katex-display {
-      display: flex;
-      justify-content: center;
-    }
-
-    .katex-display > .katex {
-      text-align: left;
-    }
-
-    .bibtex-box {
-      position: relative;
-      border: 1px solid #ccc;
-      background: #fafafa;
-      padding: 12px 12px 12px 12px;
-      border-radius: 6px;
-      font-size: 14px;
-      margin-top: 1em;
-      overflow-x: auto;
-    }
-
-    .copy-bibtex-btn {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: #eee;
-      border: 1px solid #ccc;
-      padding: 4px 8px;
-      font-size: 12px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .copy-bibtex-btn:hover {
-      background: #e0e0e0;
-    }
-
-    .sidenote-marker {
-      font-size: 0.8em;
-      vertical-align: super;
-      cursor: pointer;
-    }
-  
-
-    .sidenote {
-      position: absolute;
-      margin-left: 60%;
-      width: 30%;
-      font-size: 0.9em;
-      color: #555;
-      line-height: 1.4;
-    }
-
+    
+    /* Post Figures & Components */
+    .figure { text-align: center; margin: 24px 0; }
+    .figure img { max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 6px; }
+    .figure .caption { font-size: 0.9rem; color: #666; margin-top: 8px; font-style: italic; }
+    .figure img.half-width { width: 50%; height: auto; }
+    .figure-75 { width: 75%; height: auto; }
+    .bibtex-block { position: relative; margin-top: 1rem; border: 1px solid #ddd; border-radius: 6px; padding: 1rem; background: #fafafa; }
+    .copy-btn { float: right; margin-bottom: 4px; font-size: 0.8rem; padding: 4px 8px; }
+    pre { margin: 0; overflow-x: auto; }
+    .cta-container { text-align: center; margin-top: 2rem; margin-bottom: 2rem; }
+    .cta-button { display: inline-block; padding: 12px 22px; background-color: #e7f1ff; border: 1px solid #c5ddfb; border-radius: 8px; font-size: 16px; font-weight: 500; text-decoration: none; color: #000000; transition: all 0.18s ease; }
+    .cta-button:hover { background-color: #d8e9ff; border-color: #b5d0f8; transform: translateY(-1px); }
+    .cta-button:active { transform: translateY(0); }
+    .worked-example { border-left: 4px solid #1f78ff; background-color: #f0f8ff; padding: 12px 16px; margin: 1.5rem 0; border-radius: 6px; }
+    .worked-example p { margin: 0 0 12px 0; }
+    .math-display { margin-top: 8px; }
+    .cite { text-decoration: none; border-bottom: 1px dashed #6a9be8; color: #0b63c2; }
+    .cite:hover { text-decoration: underline; }
+    blockquote { margin-left: 1.2em; padding-left: 1em; border-left: 3px solid #cfe1ff; color: #333; font-style: italic; }
+    .katex-display { display: flex; justify-content: center; }
+    .katex-display > .katex { text-align: left; }
+    .bibtex-box { position: relative; border: 1px solid #ccc; background: #fafafa; padding: 12px 12px 12px 12px; border-radius: 6px; font-size: 14px; margin-top: 1em; overflow-x: auto; }
+    .copy-bibtex-btn { position: absolute; top: 8px; right: 8px; background: #eee; border: 1px solid #ccc; padding: 4px 8px; font-size: 12px; border-radius: 4px; cursor: pointer; }
+    .copy-bibtex-btn:hover { background: #e0e0e0; }
+    .sidenote-marker { font-size: 0.8em; vertical-align: super; cursor: pointer; }
+    .sidenote { position: absolute; margin-left: 60%; width: 30%; font-size: 0.9em; color: #555; line-height: 1.4; }
+    
     @media(max-width: 900px) {
-      .sidenote {
-        position: static;
-        display: block;
-        margin-left: 0;
-        width: 100%;
-        font-style: italic;
-      }
+      .sidenote { position: static; display: block; margin-left: 0; width: 100%; font-style: italic; }
     }
-
   </style>
 
-  <!-- MathJax for LaTeX equations -->
-  <script async id="MathJax-script"
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script>
-
-  <script>
-    function copyBibtex() {
-    const bibtex = `@article{marek2025small,
-  title={Small batch size training for language models: When vanilla sgd works, and why gradient accumulation is wasteful},
-  author={Marek, Martin and Lotfi, Sanae and Somasundaram, Aditya and Wilson, Andrew Gordon and Goldblum, Micah},
-  journal={arXiv preprint arXiv:2507.07101},
-  year={2025}
-}`;
-    navigator.clipboard.writeText(bibtex);
-    }
-    </script>
+  <script async id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 
-
 <body>
-  <header>
+  <nav class="fixed-navbar">
+    <ul class="nav-links">
+      <li><a href="../../index.html">Home</a></li>
+      <li><a href="https://github.com/AditSom" target="_blank">GitHub</a></li>
+      <li><a href="https://www.linkedin.com/in/adityasomasundaram/" target="_blank">LinkedIn</a></li>
+      <li><a href="https://scholar.google.com/citations?user=wvh68FUAAAAJ&hl=en" target="_blank">Google Scholar</a></li>
+      <li><a href="../../blog.html">Blog</a></li>
+      <li><a href="../../chess/index.html">Chess</a></li>
+    </ul>
+  </nav>
+
+  <div class="blog-header">
     <h1>Aditya Somasundaram</h1>
-    <div>as7458 [at] columbia [dot] edu</div>
-    <nav aria-label="Primary">
-      <a href="../../index.html">Home</a>
-      <a href="https://github.com/AditSom" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://www.linkedin.com/in/adityasomasundaram/" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="https://scholar.google.com/citations?user=wvh68FUAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a>
-      <a href="../../chess/index.html">Chess</a>
-    </nav>
-  </header>
+    <p>aditya [dot] somasundaram [at] mbzuai [dot] ac [dot] ae</p>
+  </div>
 
   <main class="post">
     <h1>How to train LLMs with small batch sizes?</h1>
-    <!-- Optional meta line; keep or remove -->
     <div class="meta">Posted on November 1st 2025 • by Aditya Somasundaram</div>
 
     <p>
@@ -272,8 +127,7 @@
 
     <div class="cta-container">
         <a class="cta-button" href="https://arxiv.org/abs/2507.07101" target="_blank">
-            Check out the paper
-            &nbsp;→
+            Check out the paper &nbsp;→
         </a>
     </div>
 
@@ -307,7 +161,6 @@
         <p class="caption">Figure: Effect of \(\beta\) on exponential decay / half-life in Adam.</p>
     </div>
 
-
     <p>So far, we've talked about half-life in terms of <em>steps</em>. But in large-scale language model training, a step isn't a fixed unit. Each step processes \(B \times T\) tokens, where \(B\) is the batch size and \(T\) is the sequence length. That means a half-life measured in “steps” is actually a half-life measured in <em>tokens consumed</em>. 
         If we keep \(\beta_2\) fixed while changing the batch size \(B\), then we covertly change how long the optimizer “remembers” in terms of tokens. Smaller batch sizes mean fewer tokens per step, so the same \(\beta_2\) corresponds to a shorter effective half-life in token units. In other words, holding \(\beta_2\) fixed (as is convention) causes the optimizer to “forget faster”.</p>
 
@@ -322,7 +175,6 @@
         }
         $$
     </div>
-
 
     <p>This way, regardless of change in batch size or sequence length, the half-life of the second moment with respect to total tokens remains constant. Furthermore, from this arises a very nice scaling rule for \(\beta_2\) when one changes batch size:</p>
 
@@ -361,13 +213,12 @@
 
     <ol>
       <li>
-        <h3>Scanning the Landscape: \(\beta_2, \beta_2\) and Learning Rate</h3>
+        <h3>Scanning the Landscape: \(\beta_1\), \(\beta_2\) and Learning Rate</h3>
 
         <p><strong>\(\beta_1\approx0.9\) is robust; and fixing the second moment half-life in tokens \(t_2\) is crucial.</strong> 
         Across batch sizes, the optimal learning rate increases far more slowly than the conventional \(\sqrt{B}\) scaling rule. The standard choice \(\beta_1 = 0.9\) performs reliably across settings. 
         Crucially, holding \(\beta_2\) <em>fixed</em> implicitly changes the effective half-life as batch size varies, which harms performance at small \(B\). Instead, fixing the <em>token half-life</em> \(t_2\) produces consistent behavior across batch sizes.</p>
 
-        <!-- Fig 4: Scaling heuristics / heatmaps -->
         <div class="figure">
             <img src="hparam_scaling.jpg" alt="Heatmaps" />
             <p class="caption">Figure: We sweep over learning rate, \(\beta_1\), and \(\beta_2\) across all batch sizes to find the most optimal configuration. This was done on FineWeb-Edu for a 30M parameter model.</p>
@@ -381,7 +232,6 @@
         half-life; at large \(B\) the loss rises quickly once you leave the tuned point. In practice this means fewer
         sweeps and easier hyper parameter tuning when you're running small batches.</p>
 
-        <!-- Fig 3: Robustness curves -->
         <div class="figure">
             <img src="lm30m_adam_sensitivity_1d.jpg" alt="Heatmaps" />
             <p class="caption">Figure: From the optimal configuration, we test the robustness of hyper parameters by independently changing each one. We observe that the robustness of hyper parameters improves as batch size decreases. The results are again on the 30M model trained on 600M tokens of FineWeb-Edu.</p>
@@ -395,7 +245,6 @@
         optimizers widens. The small batch regime lets you drop optimizer state without giving up performance,
         which is great for memory constrained runs.</p>
 
-        <!-- Fig 1a: Optimizer gap vs batch size -->
         <div class="figure">
             <img src="optimizer_comp.jpg" alt="Optimizer vs Batch Size" class="half-width"/>
             <p class="caption">Figure: As batch size decreases, we see that all optimizers tend to perform equivalently. Small batch sizes are more robust to optimizer design.</p>
@@ -432,7 +281,6 @@
     <p>There is something fundamentally different about preconditioning (second moment) compared to momentum (first moment), which gives rise to our discovery and optimization results. A deeper theoretical understanding of EMA and what each moment
       means would help us understand Adam, and by extension, optimization algorithms, better.</p>
 
-
     <h2>To Recap</h2>
     <p>
       Training LLMs is expensive. Model trainers usually use their hardware to the limit, making sure no resource goes underutilized. For most practitioners, GPU memory is the biggest bottleneck.
@@ -448,7 +296,6 @@
       This work was done in collaboration with truly fantastic colleagues. 
       If it helps or inspires your own training efforts, please consider citing us!
     </p>
-
 
     <div class="bibtex-box">
       <button class="copy-bibtex-btn" onclick="copyBibtex()">Copy</button>
@@ -475,7 +322,6 @@
 
     <h2>Acknowledgements</h2>
     <p>Big thanks to Martin Marek, Sanae Lotfi, and Ben Cohen for their feedback and productive discussions on this post. All remaining mistakes are mine :)</p>
-
   </main>
 </body>
 </html>
